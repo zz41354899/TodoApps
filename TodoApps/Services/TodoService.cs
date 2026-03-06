@@ -54,6 +54,16 @@ public class TodoService
         existing.IsCompleted = todo.IsCompleted;
         existing.Priority = todo.Priority;
         existing.Category = todo.Category;
+        existing.Icon = todo.Icon;
+        existing.DueDate = todo.DueDate;
+        existing.Tags = todo.Tags;
+        existing.IsStarred = todo.IsStarred;
+        existing.RecurringType = todo.RecurringType;
+        existing.RecurringInterval = todo.RecurringInterval;
+        existing.EstimatedMinutes = todo.EstimatedMinutes;
+        existing.AssignedTo = todo.AssignedTo;
+        existing.Notes = todo.Notes;
+        existing.ParentId = todo.ParentId;
         existing.CompletedAt = todo.IsCompleted ? DateTime.Now : null;
 
         await _context.SaveChangesAsync();

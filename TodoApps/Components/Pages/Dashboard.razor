@@ -20,21 +20,18 @@
             </div>
 
             <TodoFilters 
-                SearchQuery="@searchQuery"
-                SearchQueryChanged="OnSearchChanged"
-                CurrentFilter="@currentFilter"
-                CurrentFilterChanged="OnFilterChanged"
-                SortBy="@sortBy"
-                SortByChanged="OnSortChanged"
-                ShowBatchActions="@showBatchActions"
-                ShowBatchActionsChanged="OnBatchActionsChanged"
+                @bind-SearchQuery="searchQuery"
+                @bind-CurrentFilter="currentFilter"
+                @bind-SortBy="sortBy"
+                @bind-ShowBatchActions="showBatchActions"
                 TotalCount="@allTodos.Count"
                 ActiveCount="@allTodos.Count(t => !t.IsCompleted)"
                 CompletedCount="@allTodos.Count(t => t.IsCompleted)"
                 SelectedCount="@selectedTodos.Count"
                 OnBatchComplete="BatchComplete"
                 OnBatchDelete="BatchDelete"
-                OnClearSelection="ClearSelection" />
+                OnClearSelection="ClearSelection"
+                OnFilterApplied="ApplyFilters" />
 
             @if (isLoading)
             {
@@ -169,28 +166,6 @@
         };
     }
 
-    private async Task OnSearchChanged(string query)
-    {
-        searchQuery = query;
-        ApplyFilters();
-    }
-
-    private async Task OnFilterChanged(string filter)
-    {
-        currentFilter = filter;
-        ApplyFilters();
-    }
-
-    private async Task OnSortChanged(string sort)
-    {
-        sortBy = sort;
-        ApplyFilters();
-    }
-
-    private async Task OnBatchActionsChanged(bool value)
-    {
-        showBatchActions = value;
-    }
 
     private void ShowAddModal()
     {

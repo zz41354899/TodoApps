@@ -46,6 +46,9 @@
                         <p class="text-xs text-gray-500 mt-0.5 break-words">@Todo.Description</p>
                     }
                     <div class="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
+                        <span class="inline-flex items-center text-xs whitespace-nowrap">
+                            @GetPriorityIcon(Todo.Priority)
+                        </span>
                         @if (Todo.DueDate.HasValue)
                         {
                             <span class="inline-flex items-center text-xs @(IsOverdue ? "text-red-600" : "text-gray-500") whitespace-nowrap">
@@ -160,6 +163,14 @@
     [Parameter] public EventCallback<int> OnSubTaskDelete { get; set; }
 
     private bool IsOverdue => Todo.DueDate.HasValue && Todo.DueDate.Value < DateTime.Today && !Todo.IsCompleted;
+
+    private string GetPriorityIcon(string? priority) => priority switch
+    {
+        "High" => "🔴 高",
+        "Medium" => "🟡 中",
+        "Low" => "🟢 低",
+        _ => "🟡 中"
+    };
 
     private string GetRecurringText(string? type) => type switch
     {
