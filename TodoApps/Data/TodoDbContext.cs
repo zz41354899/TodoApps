@@ -27,6 +27,12 @@ public class TodoDbContext : DbContext
             entity.Property(e => e.RecurringType).HasMaxLength(20);
             entity.Property(e => e.AssignedTo).HasMaxLength(100);
             entity.Property(e => e.Notes).HasMaxLength(2000);
+            
+            // 配置子任務自我參照關聯
+            entity.HasOne(e => e.Parent)
+                .WithMany(e => e.SubTasks)
+                .HasForeignKey(e => e.ParentId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

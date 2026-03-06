@@ -1,0 +1,105 @@
+@using TodoApps.Models
+
+@* 新增/編輯任務的 Modal 組件 *@
+
+@if (IsVisible)
+{
+    <div class="fixed z-50 inset-0 overflow-y-auto" @onclick="OnClose">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-black bg-opacity-25"></div>
+            <div class="relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4" @onclick:stopPropagation="true">
+                <div class="p-4 sm:p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <button @onclick="ToggleIconPicker" class="text-3xl hover:bg-gray-100 rounded p-2">
+                                @Todo.Icon
+                            </button>
+                            <input type="text" @bind="Todo.Title" placeholder="任務標題" class="flex-1 text-lg font-medium border-0 focus:ring-0 focus:outline-none" />
+                            <button @onclick="() => Todo.IsStarred = !Todo.IsStarred" class="text-2xl hover:scale-110 transition-transform">
+                                @(Todo.IsStarred ? "⭐" : "☆")
+                            </button>
+                        </div>
+                        
+                        @if (ShowIconPicker)
+                        {
+                            <IconPicker OnIconSelected="SelectIcon" />
+                        }
+                        
+                        <textarea @bind="Todo.Description" rows="3" placeholder="新增描述..." class="w-full text-sm border-0 focus:ring-0 focus:outline-none resize-none"></textarea>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">優先級</label>
+                                <select @bind="Todo.Priority" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm">
+                                    <option value="Low">🟢 低</option>
+                                    <option value="Medium">🟡 中</option>
+                                    <option value="High">🔴 高</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">分類</label>
+                                <input type="text" @bind="Todo.Category" placeholder="工作、個人..." class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm" />
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">截止日期</label>
+                                <input type="date" @bind="Todo.DueDate" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm" />
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">預估時間（分鐘）</label>
+                                <input type="number" @bind="Todo.EstimatedMinutes" placeholder="60" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm" />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">標籤（用逗號分隔）</label>
+                            <input type="text" @bind="Todo.Tags" placeholder="重要, 緊急, 專案A" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm" />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">重複設定</label>
+                            <select @bind="Todo.RecurringType" class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm">
+                                <option value="">不重複</option>
+                                <option value="Daily">每日</option>
+                                <option value="Weekly">每週</option>
+                                <option value="Monthly">每月</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-500 mb-1">備註</label>
+                            <textarea @bind="Todo.Notes" rows="2" placeholder="額外備註..." class="w-full border border-gray-300 rounded px-3 py-1.5 text-sm resize-none"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 px-4 sm:px-6 py-3 flex justify-end space-x-2">
+                    <button @onclick="OnClose" class="px-3 sm:px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded">
+                        取消
+                    </button>
+                    <button @onclick="() => OnSave.InvokeAsync(Todo)" class="px-3 sm:px-4 py-2 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded">
+                        儲存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public TodoItem Todo { get; set; } = new();
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<TodoItem> OnSave { get; set; }
+
+    private bool ShowIconPicker { get; set; }
+
+    private void ToggleIconPicker()
+    {
+        ShowIconPicker = !ShowIconPicker;
+    }
+
+    private void SelectIcon(string icon)
+    {
+        Todo.Icon = icon;
+        ShowIconPicker = false;
+    }
+}

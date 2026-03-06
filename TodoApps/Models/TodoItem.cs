@@ -18,9 +18,12 @@ public class TodoItem
     public bool IsStarred { get; set; }
     public string? RecurringType { get; set; }
     public int? RecurringInterval { get; set; }
-    public int SubTasksTotal { get; set; }
-    public int SubTasksCompleted { get; set; }
     public string? AssignedTo { get; set; }
     public int EstimatedMinutes { get; set; }
     public string? Notes { get; set; }
+    
+    // 子任務階層
+    public int? ParentId { get; set; }
+    public TodoItem? Parent { get; set; }
+    public List<TodoItem> SubTasks { get; set; } = new();
 }

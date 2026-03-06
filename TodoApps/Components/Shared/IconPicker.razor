@@ -1,0 +1,20 @@
+@* Icon 選擇器組件 *@
+
+<div class="grid grid-cols-8 gap-2 p-3 bg-gray-50 rounded">
+    @foreach (var icon in AvailableIcons)
+    {
+        <button @onclick="() => OnIconSelected.InvokeAsync(icon)" class="text-2xl hover:bg-gray-200 rounded p-2">@icon</button>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> OnIconSelected { get; set; }
+
+    private string[] AvailableIcons = new[]
+    {
+        "📝", "✅", "📋", "📌", "⭐", "🎯", "💡", "🔥",
+        "📱", "💻", "📧", "📞", "🏠", "🏢", "🛒", "🎓",
+        "💪", "🎨", "📚", "✈️", "🚗", "🍕", "☕", "🎵",
+        "⚡", "🌟", "🎉", "🔔", "📅", "⏰", "🎁", "🌈"
+    };
+}

@@ -16,13 +16,25 @@ public class TodoService
     public async Task<List<TodoItem>> GetAllTodosAsync()
     {
         return await _context.TodoItems
+            .Include(t => t.SubTasks)
+            .Where(t => t.ParentId == null)
             .OrderByDescending(t => t.CreatedAt)
             .ToListAsync();
     }
 
     public async Task<TodoItem?> GetTodoByIdAsync(int id)
     {
-        return await _context.TodoItems.FindAsync(id);
+        return await _context.TodoItems
+            .Include(t => t.SubTasks)
+            .FirstOrDefaultAsync(t => t.Id == id);
+    }
+    
+    public async Task<List<TodoItem>> GetSubTasksAsync(int parentId)
+    {
+        return await _context.TodoItems
+            .Where(t => t.ParentId == parentId)
+            .OrderBy(t => t.CreatedAt)
+            .ToListAsync();
     }
 
     public async Task<TodoItem> CreateTodoAsync(TodoItem todo)

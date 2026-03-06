@@ -1,0 +1,99 @@
+@* 篩選和排序組件 *@
+
+<div class="mb-4 sm:mb-6 space-y-3">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div class="flex-1 relative">
+            <input type="text" @bind="SearchQuery" @bind:event="oninput" 
+                   placeholder="搜尋任務..." 
+                   class="w-full pl-9 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <svg class="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </div>
+        <button @onclick="OnToggleBatchActions" class="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 whitespace-nowrap">
+            批次操作
+        </button>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs sm:text-sm">
+        <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
+            <span class="text-gray-500 whitespace-nowrap">篩選：</span>
+            <button @onclick='() => OnFilterChanged("all")' class="px-2 sm:px-3 py-1 rounded whitespace-nowrap @(CurrentFilter == "all" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200")">
+                全部 (@TotalCount)
+            </button>
+            <button @onclick='() => OnFilterChanged("active")' class="px-2 sm:px-3 py-1 rounded whitespace-nowrap @(CurrentFilter == "active" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200")">
+                進行中 (@ActiveCount)
+            </button>
+            <button @onclick='() => OnFilterChanged("completed")' class="px-2 sm:px-3 py-1 rounded whitespace-nowrap @(CurrentFilter == "completed" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200")">
+                已完成 (@CompletedCount)
+            </button>
+            <button @onclick='() => OnFilterChanged("starred")' class="px-2 sm:px-3 py-1 rounded whitespace-nowrap @(CurrentFilter == "starred" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200")">
+                ⭐ 已加星號
+            </button>
+            <button @onclick='() => OnFilterChanged("overdue")' class="px-2 sm:px-3 py-1 rounded whitespace-nowrap @(CurrentFilter == "overdue" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200")">
+                🔴 已逾期
+            </button>
+        </div>
+        <select @bind="SortBy" @bind:after="OnSortChanged" class="px-3 py-1 text-sm border border-gray-300 rounded">
+            <option value="created">建立時間</option>
+            <option value="duedate">截止日期</option>
+            <option value="priority">優先級</option>
+            <option value="title">標題</option>
+        </select>
+    </div>
+
+    @if (ShowBatchActions && SelectedCount > 0)
+    {
+        <div class="flex items-center space-x-2 p-3 bg-blue-50 rounded-lg">
+            <span class="text-sm text-blue-900">已選擇 @SelectedCount 個任務</span>
+            <button @onclick="OnBatchComplete" class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700">
+                標記完成
+            </button>
+            <button @onclick="OnBatchDelete" class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700">
+                批次刪除
+            </button>
+            <button @onclick="OnClearSelection" class="px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700">
+                取消選擇
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string SearchQuery { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> SearchQueryChanged { get; set; }
+    [Parameter] public string CurrentFilter { get; set; } = "all";
+    [Parameter] public EventCallback<string> CurrentFilterChanged { get; set; }
+    [Parameter] public string SortBy { get; set; } = "created";
+    [Parameter] public EventCallback<string> SortByChanged { get; set; }
+    [Parameter] public bool ShowBatchActions { get; set; }
+    [Parameter] public EventCallback<bool> ShowBatchActionsChanged { get; set; }
+    [Parameter] public int TotalCount { get; set; }
+    [Parameter] public int ActiveCount { get; set; }
+    [Parameter] public int CompletedCount { get; set; }
+    [Parameter] public int SelectedCount { get; set; }
+    [Parameter] public EventCallback OnBatchComplete { get; set; }
+    [Parameter] public EventCallback OnBatchDelete { get; set; }
+    [Parameter] public EventCallback OnClearSelection { get; set; }
+
+    private async Task OnSearchChanged(ChangeEventArgs e)
+    {
+        SearchQuery = e.Value?.ToString() ?? string.Empty;
+        await SearchQueryChanged.InvokeAsync(SearchQuery);
+    }
+
+    private async Task OnFilterChanged(string filter)
+    {
+        await CurrentFilterChanged.InvokeAsync(filter);
+    }
+
+    private async Task OnSortChanged()
+    {
+        await SortByChanged.InvokeAsync(SortBy);
+    }
+
+    private async Task OnToggleBatchActions()
+    {
+        await ShowBatchActionsChanged.InvokeAsync(!ShowBatchActions);
+    }
+}
