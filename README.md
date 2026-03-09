@@ -1,10 +1,10 @@
 # 📋 Notion 風格 TodoList
 
-一個功能豐富、設計精美的待辦事項管理系統，採用 Notion 風格的簡潔介面設計，使用 Blazor Server、Tailwind CSS 和 SQLite 建立。
+一個功能豐富、設計精美的待辦事項管理系統，採用 Notion 風格的簡潔介面設計，使用 Blazor Server、Bootstrap 和 SQLite 建立。
 
 ![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET_10-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 
 ## ✨ 功能特色
@@ -57,7 +57,7 @@
 | 技術 | 版本 | 用途 |
 |------|------|------|
 | **Blazor Server** | .NET 10 | 前端框架 |
-| **Tailwind CSS** | v3 | UI 樣式 |
+| **Bootstrap** | 5.3 | UI 樣式框架 |
 | **SQLite** | - | 本地資料庫 |
 | **Entity Framework Core** | 10 | ORM |
 
@@ -65,7 +65,6 @@
 
 ### 前置需求
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [Node.js](https://nodejs.org/) (用於 Tailwind CSS)
 
 ### 安裝步驟
 
@@ -80,26 +79,18 @@ cd TodoApps
 dotnet restore
 ```
 
-3. **安裝 npm 套件**
+3. **執行應用程式**
 ```bash
 cd TodoApps
-npm install
-```
-
-4. **編譯 Tailwind CSS**
-```bash
-npm run build:css
-```
-
-5. **執行應用程式**
-```bash
 dotnet run
 ```
 
-6. **開啟瀏覽器**
+4. **開啟瀏覽器**
 ```
 http://localhost:5298
 ```
+
+> 💡 **注意**：本專案使用 Bootstrap CDN，無需額外安裝 npm 套件或編譯 CSS。
 
 ## 📁 專案結構
 
@@ -111,6 +102,11 @@ TodoApps/
 │   │   └── Sidebar.razor         # 側邊欄導航
 │   ├── Pages/
 │   │   └── Dashboard.razor       # 主要 Dashboard 頁面
+│   ├── Shared/
+│   │   ├── TodoFilters.razor     # 篩選和排序元件
+│   │   ├── TodoListItem.razor    # 任務項目元件
+│   │   ├── TodoModal.razor       # 新增/編輯 Modal
+│   │   └── IconPicker.razor      # 圖示選擇器
 │   └── App.razor                 # 應用程式根元件
 ├── Data/
 │   └── TodoDbContext.cs          # Entity Framework DbContext
@@ -118,14 +114,9 @@ TodoApps/
 │   └── TodoItem.cs               # Todo 資料模型
 ├── Services/
 │   └── TodoService.cs            # Todo 業務邏輯服務
-├── Styles/
-│   └── app.css                   # Tailwind CSS 來源檔
 ├── wwwroot/
-│   └── css/
-│       └── app.css               # 編譯後的 CSS
+│   └── app.css                   # 自訂 CSS 樣式
 ├── Program.cs                    # 應用程式進入點
-├── tailwind.config.js            # Tailwind 配置
-├── package.json                  # npm 套件配置
 └── todos.db                      # SQLite 資料庫（自動建立）
 ```
 
@@ -184,23 +175,24 @@ Icon：💻
 
 ## 🔧 開發指南
 
-### Tailwind CSS 開發流程
+### 樣式開發
 
-1. **啟動 Watch 模式**（推薦）
-```bash
-npm run watch:css
-```
+本專案使用 **Bootstrap 5.3** 作為 UI 框架：
 
-2. **修改 Razor 檔案**
-   - 編輯 `.razor` 檔案中的 Tailwind class
-   - CSS 會自動重新編譯
+- **Bootstrap CDN**：透過 CDN 引入，無需本地安裝
+- **自訂樣式**：可在 `wwwroot/app.css` 中新增自訂 CSS
+- **即時預覽**：修改 `.razor` 檔案後，重新整理瀏覽器即可看到變更
 
-3. **重新整理瀏覽器**
-   - 查看變更效果
+### Bootstrap 類別使用範例
+```html
+<!-- Flexbox 佈局 -->
+<div class="d-flex align-items-center gap-2">
+  
+<!-- 按鈕樣式 -->
+<button class="btn btn-primary btn-sm">按鈕</button>
 
-### 手動建置 CSS
-```bash
-npm run build:css
+<!-- 表單控制項 -->
+<input type="text" class="form-control form-control-sm">
 ```
 
 ### 資料庫管理

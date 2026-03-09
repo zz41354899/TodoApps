@@ -15,8 +15,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
   </ItemGroup>
 
-  <Target Name="BuildTailwindCSS" BeforeTargets="Compile">
-    <Exec Command="npm run build:css" />
-  </Target>
-
 </Project>

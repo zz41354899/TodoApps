@@ -2,6 +2,10 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.d-flex:hover .action-buttons {
+    opacity: 1 !important;
+}
+
 a, .btn-link {
     color: #006bb7;
 }
